@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}Recipe Manager{% endblock %}
+
+{% block content %}
+    <header class="header-section">
+        <div class="header-content">
+            <h1><i class="fa-solid fa-kitchen-set"></i> Chef Reference Tool</h1>
+            <a href="{{ url_for('add_recipe') }}" class="add-button"><i class="fa-solid fa-plus"></i> Add New Recipe</a>
+        </div>
+        <!-- Refactor this and other metrics into the dashboard:             -->
+        <!-- <p class="total-recipes">Total Recipes: {{ total_recipes }}</p> -->
+    </header>
+
+    <section class="middle-section">
+        <div class="grid-container">
+
+            <!-- Search Feature -->
+            <div class="card left-card">
+                <h2>Search Recipes</h2>
+                <form method="GET" action="{{ url_for('search') }}" class="modern-form">
+                    <div class="form-group">
+                        <label for="keyword">Keyword</label>
+                        <input type="text" id="keyword" name="keyword" placeholder="Search by keyword" value="{{ keyword or '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="ingredient">Ingredient</label>
+                        <input type="text" id="ingredient" name="ingredient" placeholder="Search by ingredient" value="{{ ingredient or '' }}">
+                    </div>
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+            </div>
+
+            <!-- Recently Added Recipes -->
+            <div class="card right-card">
+                <h2>Recently Added</h2>
+                <ul class="recent-recipes">
+                    {% for recent in recently_added %}
+                    <li>
+                        <span class="date">{{ recent['date'] }}</span>
+                        <a href="{{ url_for('view_recipe', recipe_id=recent['id']) }}">{{ recent['title'] }}</a>
+                        
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Main Content: No recipes OR all recipes OR filtered recipes -->
+    <section class="content-section">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% if recipes %}
+        <ul class="recipe-grid">
+            {% for recipe in recipes %}
+            <li>
+                <a href="{{ url_for('view_recipe', recipe_id=recipe['id']) }}" class="recipe-card-link">
+                    <div class="recipe-card">
+                        <h3>{{ recipe['title'] }}</h3>
+                        <p class="metadata">Prep: {{ recipe['prep_time'] }}m | Cook: {{ recipe['cook_time'] }}m</p>
+                        <div class="recipe-card-badge">
+                            {% set ingredients = recipe['ingredients'].split(',') %}
+                            {% for ingredient in ingredients[:3] %}
+                                <span class="ingredient">{{ ingredient.strip() }}</span>
+                            {% endfor %}
+                            {% if ingredients|length > 3 %}
+                                <span class="ingredient more-ingredients">+ {{ ingredients|length - 2 }} more</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>No recipes to display. Try adding a new recipe!</p>
+        {% endif %}
+    </section>
+
+{% endblock %}

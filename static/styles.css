@@ -1,0 +1,442 @@
+/* CSS Variables for Color Palette */
+:root {
+    /* Primary Colors */
+    --background-color: #1a1a1a; /* Very dark gray for a futuristic feel */
+    --text-color: #ffee6b; /* Sunflower for text */
+    --accent-color: #ff6b6b; /* Neon pink */
+    --secondary-accent: #ff8a66; /* Deep purple */
+    --button-hover-color: #ff4b4b; /* Slightly darker pink for hover effects */
+    --delete-button-bg: rgba(255, 107, 107, 0.7); /* Semi-transparent neon pink for delete button */
+    --button-border-color: #803939; /* Darker shade for button borders */
+    --card-background: #2a2a2a; /* Slightly lighter dark gray */
+    --highlight-color: #ffee6b; /* For highlighting elements */
+    --shadow-color: rgba(0,0,0,0.5); /* Shadow for cards and elements */
+    --overlay-color: rgba(0, 0, 0, 0.8); /* Dark overlay for lightbox */
+}
+
+/* Browser scrollbar styles */
+::-webkit-scrollbar {
+    width: 12px; /* Width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background-color); /* Track color, matching background */
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-color); /* Color of the scroll thumb */
+    border-radius: 6px; /* Rounded corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--button-hover-color); /* Slightly darker color for hover effect */
+}
+
+/* Base Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0 20px;
+}
+
+h1, h2, h3 {
+    color: var(--secondary-accent);
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.ingredients li {
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+/* Form Styles */
+form {
+    max-width: 100%;
+    margin: 0 0;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    color: var(--accent-color);
+    font-size: 1em;
+}
+
+input, textarea {
+    width: 95%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    background-color: var(--background-color);
+    color: var(--accent-color);
+}
+
+button {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    padding: 5px 20px;
+    border-radius: 4px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
+}
+
+button:hover {
+    background-color: var(--accent-color);
+    color: white;
+    border: 1px solid transparent;
+}
+
+/* Header Styles */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: var(--background-color);
+    padding: 10px 0;
+}
+
+.sticky-header {
+    display: flex;
+    justify-content: space-around;
+    padding: 0;
+}
+
+.header-section {
+    background-color: transparent;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.header-section h1 {
+    font-size: 1em;
+    margin: 0;
+}
+
+.header-section .add-button {
+    font-size: 0.9em;
+}
+
+.total-recipes {
+    font-size: 0.8em;
+    color: var(--accent-color);
+    margin-top: 5px;
+}
+
+.encouragement {
+    background-color: var(--card-background);
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-style: italic;
+    color: var(--accent-color);
+    margin-top: 20px;
+}
+
+/* Grid Layouts */
+.grid-container, .recipe-grid, .photo-gallery {
+    display: grid;
+    gap: 20px;
+}
+
+.grid-container {
+    grid-template-columns: 1fr 1fr;
+}
+
+.recipe-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.photo-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    margin-top: 10px;
+}
+
+/* Card Styles */
+.card {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+.recipe-card {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    min-height: 150px; /* Or adjust to your liking */
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+}
+
+.recipe-card .recipe-card-badge {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.recipe-card h3 {
+    margin: 0;
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+.recipe-card:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s;
+}
+
+/* Ensure the entire card is clickable */
+.recipe-card-link {
+    text-decoration: none; /* Remove underline from links */
+    color: inherit; /* Inherit text color from parent */
+    display: block; /* Ensure it covers the entire card area */
+    height: 100%; /* Fill the height of the li */
+}
+
+/* Hover effect for the entire card */
+.recipe-card-link:hover .recipe-card {
+    transform: translateY(-2px);
+    transition: transform 0.2s;
+}
+
+.ingredient {
+    color: var(--button-border-color);
+    background-color: var(--highlight-color);
+    font-size: 0.8em;
+    padding: 0.3em;
+    border-radius: 5px;
+}
+
+.more-ingredients {
+    color: var(--button-border-color);
+    background-color: var(--highlight-color);
+}
+
+/* Recent Recipes */
+.recent-recipes {
+    padding: 0;
+}
+
+.recent-recipes li {
+    margin-bottom: 5px;
+    padding: 0;
+}
+
+.recent-recipes a {
+    font-size: 0.9em;
+    color: var(--accent-color);
+}
+
+.date {
+    font-size: 0.8em;
+    color: var(--text-color);
+}
+
+/* View Recipe Page Styles */
+.recipe-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    color: var(--text-color);
+}
+
+.recipe-container h1 {
+    display: block;
+    text-decoration: underline;
+    font-size: 1.8em;
+    margin: 0px 0px;
+}
+
+.metadata {
+    color: var(--accent-color);
+    font-size: 1em;
+}
+
+.content-section {
+    margin: 30px 0;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 8px;
+}
+
+.content-section h3 {
+    margin-top: 0;
+}
+
+.actions {
+    margin-top: 5px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 15px;
+}
+
+.pdf-button, .back-button, .update-button {
+    background-color: transparent;
+    border: 1px solid var(--button-border-color);
+    color: var(--accent-color);
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.pdf-button i, .back-button i, .update-button i {
+    margin-right: 5px; /* Space between icon and text */
+}
+
+.delete-button {
+    background-color: transparent;
+    border: 1px solid var(--button-border-color);
+    color: var(--accent-color);
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.delete-button:hover {
+    background-color: var(--button-hover-color);
+    color: white;
+}
+
+/* Photo Gallery */
+.photo-item {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1;
+}
+
+.photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s;
+}
+
+.delete-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--delete-button-bg);
+    color: var(--background-color);
+    padding: 5px 10px;
+    border-radius: 3px;
+    text-decoration: none;
+    font-size: 0.9em;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.photo-item:hover .delete-image {
+    opacity: 1;
+}
+
+.photo-item:hover img {
+    opacity: 0.7;
+}
+
+/* Lightbox */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--overlay-color);
+    z-index: 1000;
+}
+
+.lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(91, 91, 91, 0.079);
+}
+
+/* Modern Form Styling */
+.modern-form label {
+    font-size: 0.7em;
+    margin-bottom: 5px;
+}
+
+.modern-form input {
+    font-size: 0.9em;
+    border: 1px solid var(--accent-color);
+}
+
+/* Medium Screens */
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-content {
+        flex-direction: column;
+    }
+
+    .header-section .add-button {
+        margin-top: 10px;
+    }
+}
+
+/* Small Screens */
+@media (max-width: 480px) {
+    .pdf-button, .back-button, .update-button {
+        padding: 5px; /* Reduce padding for icons */
+    }
+    
+    .pdf-button span, .back-button span, .update-button span {
+        display: none; /* Hide the text */
+    }
+    
+    .pdf-button i, .back-button i, .update-button i {
+        margin-right: 0; /* Remove margin since text is gone */
+    }
+}

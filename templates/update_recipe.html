@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block title %}Update Recipe - {{ recipe['title'] }}{% endblock %}
+    
+{% block content %}
+    <div class="recipe-container">
+        <h1>Update {{ recipe['title'] }}</h1>
+        
+        <form method="POST" enctype="multipart/form-data" class="modern-form">
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" value="{{ recipe['title'] }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="author">Author:</label>
+                <input type="text" id="author" name="author" value="{{ recipe['author'] }}">
+            </div>
+
+            <div class="form-group">
+                <label for="prep_time">Prep Time (minutes):</label>
+                <input type="number" id="prep_time" name="prep_time" value="{{ recipe['prep_time'] }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cook_time">Cook Time (minutes):</label>
+                <input type="number" id="cook_time" name="cook_time" value="{{ recipe['cook_time'] }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="ingredients">Ingredients:</label>
+                <textarea id="ingredients" name="ingredients" required>{{ recipe['ingredients'] }}</textarea>
+                <p class="recipe-card-badge">
+                    {% for ingredient in recipe['ingredients'].split(',') %}
+                        <span class="ingredient">{{ ingredient.strip() }}</span>
+                    {% endfor %}
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label for="instructions">Instructions:</label>
+                <textarea id="instructions" name="instructions" required>{{ recipe['instructions'] }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="variations">Variations:</label>
+                <textarea id="variations" name="variations">{{ recipe['variations'] }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Notes:</label>
+                <textarea id="notes" name="notes">{{ recipe['notes'] }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="images">Update Images:</label>
+                <input type="file" id="images" name="images" accept="image/*" multiple>
+            </div>
+
+            <!-- Display current images in photo gallery style -->
+            {% if images %}
+            <div class="photo-gallery">
+                {% for image in images %}
+                    <div class="photo-item">
+                        <img src="{{ url_for('static', filename=image['image_path'].replace('static/', '')) }}" alt="Current Image">
+                        <a href="{{ url_for('delete_image', image_id=image['id']) }}" class="delete-image"><i class="fa-solid fa-trash-can"></i></a>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <button type="submit" class="submit-button">Update Recipe</button>
+
+            <div class="actions">
+                <a href="{{ url_for('view_recipe', recipe_id=recipe['id']) }}" class="back-button">Cancel</a>
+                <a href="{{ url_for('delete_recipe', recipe_id=recipe['id']) }}" id="delete-button" class="delete-button" onclick="return confirm('Are you sure you want to delete this recipe? This action cannot be undone.');">Delete Recipe</a>
+            </div>
+        </form>
+
+    </div>
+        
+{% endblock %}
