@@ -31,3 +31,19 @@
             lightbox.addEventListener('click', closeLightbox);
         });
     });
+
+
+    // Adjust color values
+    document.addEventListener('DOMContentLoaded', (event) => {
+        function updateValue(elementId, valueId) {
+            const slider = document.getElementById(elementId);
+            const valueDisplay = document.getElementById(valueId);
+            
+            slider.addEventListener('input', function() {
+                valueDisplay.textContent = this.value;
+            });
+        }
+        
+        updateValue('prep_time', 'prep_time_value');
+        updateValue('cook_time', 'cook_time_value');
+    });

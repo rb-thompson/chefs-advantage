@@ -12,6 +12,7 @@
     --highlight-color: #ffee6b; /* For highlighting elements */
     --shadow-color: rgba(0,0,0,0.5); /* Shadow for cards and elements */
     --overlay-color: rgba(0, 0, 0, 0.8); /* Dark overlay for lightbox */
+    --dark-accent-color: #220f0f;
 }
 
 /* Browser scrollbar styles */
@@ -24,12 +25,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--accent-color); /* Color of the scroll thumb */
+    background: var(--card-background); /* Color of the scroll thumb */
     border-radius: 6px; /* Rounded corners */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--button-hover-color); /* Slightly darker color for hover effect */
+    background: var(--button-border-color); /* Slightly darker color for hover effect */
 }
 
 /* Base Styles */
@@ -37,7 +38,11 @@ body {
     font-family: Arial, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
-    margin: 0 20px;
+    margin: 0px 0px;
+}
+
+.wrapper {
+    margin: 0px 20px;
 }
 
 h1, h2, h3 {
@@ -90,7 +95,49 @@ input, textarea {
     border: 1px solid var(--accent-color);
     border-radius: 4px;
     background-color: var(--background-color);
+    color: wheat;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input::file-selector-button {
+    background-color: var(--button-border-color);
     color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    padding: 5px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin-right: 10px;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0 auto;
+    border: none;
+}
+
+/* Styling the track (the background of the slider) */
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 90%;
+    height: 8px;
+    cursor: pointer;
+    background: var(--card-background); /* Blue background for the track */
+    border-radius: 5px;
+}
+
+/* Styling the thumb (the draggable part) */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background: var(--highlight-color); /* Orange thumb for Webkit */
+    cursor: pointer;
+    border-radius: 50%;
+    margin-top: -4px; /* Center the thumb */
 }
 
 button {
@@ -101,13 +148,11 @@ button {
     border-radius: 4px;
     margin-top: 10px;
     cursor: pointer;
-    font-size: 1.1em;
+    font-size: 1em;
 }
 
-button:hover {
-    background-color: var(--accent-color);
-    color: white;
-    border: 1px solid transparent;
+#prep_time_value, #cook_time_value {
+    color: var(--text-color)
 }
 
 /* Header Styles */
@@ -119,17 +164,11 @@ button:hover {
     padding: 10px 0;
 }
 
-.sticky-header {
-    display: flex;
-    justify-content: space-around;
-    padding: 0;
-}
-
 .header-section {
     background-color: transparent;
     padding: 15px;
     border-radius: 5px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -144,8 +183,10 @@ button:hover {
 }
 
 .header-section h1 {
-    font-size: 1em;
+    font-size: 1.2em;
     margin: 0;
+    color: var(--accent-color);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .header-section .add-button {
@@ -204,6 +245,7 @@ button:hover {
     display: flex;
     flex-direction: column;
     justify-content: start;
+    transition: all 0.3s ease; /* Smooth transition for all properties */
 }
 
 .recipe-card .recipe-card-badge {
@@ -221,8 +263,14 @@ button:hover {
 }
 
 .recipe-card:hover {
+    box-shadow: 0 5px 0px var(--button-border-color);
     transform: translateY(-2px);
-    transition: transform 0.2s;
+}
+
+/* Additional effect for when the mouse moves off the button */
+.recipe-card:active {
+    transform: translateY(0);
+    box-shadow: none;
 }
 
 /* Ensure the entire card is clickable */
@@ -276,7 +324,7 @@ button:hover {
 .recipe-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0px;
     color: var(--text-color);
 }
 
@@ -308,11 +356,23 @@ button:hover {
     padding: 5px;
     display: flex;
     justify-content: center;
-    width: 100%;
     gap: 15px;
 }
 
-.pdf-button, .back-button, .update-button {
+.add-button {
+    background-color: #220f0f;
+    border: 1px solid var(--button-border-color);
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: all 0.3s ease; /* Smooth transition for all properties */
+}
+
+.add-button:hover {
+    /* Change background color slightly */
+    background-color: #421d1d;
+  }
+
+.pdf-button, .back-button, .update-button, .submit-button, .delete-button {
     background-color: transparent;
     border: 1px solid var(--button-border-color);
     color: var(--accent-color);
@@ -322,24 +382,11 @@ button:hover {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    margin: 0;
 }
 
-.pdf-button i, .back-button i, .update-button i {
+.pdf-button i, .back-button i, .update-button i, .submit-button i, .delete-button i {
     margin-right: 5px; /* Space between icon and text */
-}
-
-.delete-button {
-    background-color: transparent;
-    border: 1px solid var(--button-border-color);
-    color: var(--accent-color);
-    padding: 10px 20px;
-    border-radius: 4px;
-    text-decoration: none;
-}
-
-.delete-button:hover {
-    background-color: var(--button-hover-color);
-    color: white;
 }
 
 /* Photo Gallery */
@@ -409,6 +456,20 @@ button:hover {
 .modern-form input {
     font-size: 0.9em;
     border: 1px solid var(--accent-color);
+}
+
+.group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0px;
+    
+}
+
+.sub-group-start, .sub-group-end {
+    width: 95%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Medium Screens */

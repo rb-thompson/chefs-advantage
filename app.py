@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, send_file,
 import sqlite3
 import os
 from datetime import datetime
-from werkzeug.utils import secure_filename
 import random
 
 app = Flask(__name__)
@@ -143,7 +142,7 @@ def add_recipe():
                     hash_value = generate_image_hash()
                     extension = file.filename.rsplit('.', 1)[1].lower()
                     new_filename = f"{hash_value}.{extension}"
-                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename).replace('\\', '/')
                     
                     file.save(filepath)
                     c.execute('''

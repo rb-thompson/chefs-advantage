@@ -3,69 +3,71 @@
 {% block title %}{{ recipe['title'] }}{% endblock %}
     
 {% block content %}
-    <header class="sticky-header">
-        <div class="actions">
-            <a href="{{ url_for('index') }}" class="back-button"><i class="fa-solid fa-circle-left"></i><span>Back to All Recipes</span></a>
-            <a href="{{ url_for('update_recipe', recipe_id=recipe['id']) }}" class="update-button"><i class="fa-solid fa-pen"></i><span>Update Recipe</span></a>
-            <a href="{{ url_for('generate_pdf', recipe_id=recipe['id']) }}" class="pdf-button"><i class="fa-solid fa-download"></i><span>Download PDF</span></a>
-
-        </div>
-    </header>
-
-    <article class="recipe-container">
-        <h1>{{ recipe['title'] }}</h1>
-        <div class="metadata">
-            
-            <p>Added on {{ recipe['date'] | format_date("%B %d, %Y") }}</p>
-            {% if recipe['prep_time'] or recipe['cook_time'] %}
-                <p>
-                    <i class="fa-solid fa-stopwatch"></i>
-                    {% if recipe['prep_time'] %}Prep: {{ recipe['prep_time'] }}m{% endif %}
-                    {% if recipe['cook_time'] %} • Cook: {{ recipe['cook_time'] }}m{% endif %}
-                </p>
+    <div class="wrapper">
+        <header class="sticky-header">
+            <div class="actions">
+                <a href="{{ url_for('index') }}" class="back-button"><i class="fa-solid fa-circle-left"></i><span>Back to All Recipes</span></a>
+                <a href="{{ url_for('update_recipe', recipe_id=recipe['id']) }}" class="update-button"><i class="fa-solid fa-pen"></i><span>Update Recipe</span></a>
+                <a href="{{ url_for('generate_pdf', recipe_id=recipe['id']) }}" class="pdf-button"><i class="fa-solid fa-file-pdf"></i><span>PDF</span></a>
+    
+            </div>
+        </header>
+    
+        <article class="recipe-container">
+            <h1>{{ recipe['title'] }}</h1>
+            <div class="metadata">
+                
+                <p>Added on {{ recipe['date'] | format_date("%B %d, %Y") }}</p>
+                {% if recipe['prep_time'] or recipe['cook_time'] %}
+                    <p>
+                        <i class="fa-solid fa-stopwatch"></i>
+                        {% if recipe['prep_time'] %}Prep: {{ recipe['prep_time'] }}m{% endif %}
+                        {% if recipe['cook_time'] %} • Cook: {{ recipe['cook_time'] }}m{% endif %}
+                    </p>
+                {% endif %}
+            </div>
+    
+            <!-- Photo Gallery -->
+            {% if images %}
+                <div class="photo-gallery">
+                    {% for image in images %}
+                        <div class="photo-item">
+                            <img src="{{ url_for('static', filename=image['image_path'].replace('static/', '')) }}" alt="Recipe Image">
+                        </div>
+                    {% endfor %}
+                </div>
             {% endif %}
-        </div>
-
-        <!-- Photo Gallery -->
-        {% if images %}
-            <div class="photo-gallery">
-                {% for image in images %}
-                    <div class="photo-item">
-                        <img src="{{ url_for('static', filename=image['image_path'].replace('static/', '')) }}" alt="Recipe Image">
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        <!-- Recipe Content -->
-        <div class="content-section">
-            <h2>Ingredients</h2>
-            <ul class="ingredients">
-                {% for ingredient in ingredients_list %}
-                    <li><i class="fa-regular fa-square"></i> {{ ingredient.strip() }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <div class="content-section">
-            <h2>Instructions</h2>
-            <p>{{ recipe['instructions'] | replace('\n', '<br>') | safe }}</p>
-        </div>
-
-        {% if recipe['variations'] %}
+    
+            <!-- Recipe Content -->
             <div class="content-section">
-                <h2>Variations</h2>
-                <p>{{ recipe['variations'] | replace('\n', '<br>') | safe }}</p>
+                <h2>Ingredients</h2>
+                <ul class="ingredients">
+                    {% for ingredient in ingredients_list %}
+                        <li><i class="fa-regular fa-square"></i> {{ ingredient.strip() }}</li>
+                    {% endfor %}
+                </ul>
             </div>
-        {% endif %}
-
-        {% if recipe['notes'] %}
+    
             <div class="content-section">
-                <h2>Notes</h2>
-                <p>{{ recipe['notes'] | replace('\n', '<br>') | safe }}</p>
+                <h2>Instructions</h2>
+                <p>{{ recipe['instructions'] | replace('\n', '<br>') | safe }}</p>
             </div>
-        {% endif %}
-
-    </article>
+    
+            {% if recipe['variations'] %}
+                <div class="content-section">
+                    <h2>Variations</h2>
+                    <p>{{ recipe['variations'] | replace('\n', '<br>') | safe }}</p>
+                </div>
+            {% endif %}
+    
+            {% if recipe['notes'] %}
+                <div class="content-section">
+                    <h2>Notes</h2>
+                    <p>{{ recipe['notes'] | replace('\n', '<br>') | safe }}</p>
+                </div>
+            {% endif %}
+    
+        </article>
+    </div>
         
 {% endblock %}

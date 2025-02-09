@@ -3,46 +3,63 @@
 {% block title %}Add Recipe{% endblock %}
 
 {% block content %}
-<div class="grid-container">
-    <section>
-        <h1>Add New Recipe</h1>
+<header class="sticky-header">
+    <div class="actions">
         <a href="{{ url_for('index') }}" class="back-button"><i class="fa-solid fa-circle-left"></i><span>Back to All Recipes</span></a>
-    </section>
+        <button form="add-recipe-form" type="submit" class="submit-button"><i class="fa-solid fa-floppy-disk"></i><span>Save Recipe</span></button>
+    </div>
+</header>
+<div class="wrapper">
+    <article class="recipe-container">
+        <h1>Add New Recipe</h1>
+        <form method="POST" id="add-recipe-form" enctype="multipart/form-data">
+            <div class="grid-container">
+                <div class="group-start">
+                    <div class="group">
+                        <div class="sub-group-start">
+                            <label for="title">Title:</label>
+                            <input type="text" id="title" name="title" placeholder="What is your dish called?" required autofocus>
+                        </div>
+                        <div class="sub-group-end">
+                            <label for="author">Author:</label>
+                            <input type="text" id="author" name="author" placeholder="Who does the credit go to?">
     
-    <form method="POST" enctype="multipart/form-data">
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" required>
-        <br>
-        <label for="author">Author:</label>
-        <input type="text" id="author" name="author">
-        <br>
-        <label for="prep_time">Prep Time (minutes):</label>
-        <input type="number" id="prep_time" name="prep_time" required>
-        <br>
-        <label for="cook_time">Cook Time (minutes):</label>
-        <input type="number" id="cook_time" name="cook_time" required>
-        <br>
-        <label for="ingredients">Ingredients (comma-separated):</label>
-        <textarea id="ingredients" name="ingredients" required></textarea>
-        <br>
-        <label for="instructions">Instructions:</label>
-        <textarea id="instructions" name="instructions" required></textarea>
-        <br>
-        <label for="variations">Variations:</label>
-        <textarea id="variations" name="variations"></textarea>
-        <br>
-        <label for="notes">Notes:</label>
-        <textarea id="notes" name="notes"></textarea>
-        <br>
-
-        <!-- Add photo upload section -->
-        <label for="images">Add Photos:</label>
-        <input type="file" id="images" name="images" accept="image/*" multiple>
-        <br>
-
-        <button type="submit">Save Recipe</button>
-    </form>
-
+                        </div>
+                    </div>
+                    <br>
+                    <label for="ingredients">Ingredients (comma-separated):</label>
+                    <textarea id="ingredients" rows="3" name="ingredients" required placeholder="flour, milk, eggs, etc.."></textarea>
+                    <br>
+                    <label for="instructions">Instructions:</label>
+                    <textarea id="instructions" rows="5" name="instructions" required placeholder="Step 1: Start somewhere.."></textarea>
+                    <br>
+                    <div class="group">
+                        <div class="sub-group-start">
+                            <label for="prep_time">Prep Time (minutes): <span id="prep_time_value">5</span></label>
+                            <input type="range" id="prep_time" name="prep_time" min="0" max="180" value="5" step="5" required>
+                        </div>
+                        <div class="sub-group-end">
+                            <label for="cook_time">Cook Time (minutes): <span id="cook_time_value">5</span></label>
+                            <input type="range" id="cook_time" name="cook_time" min="0" max="180" value="5" step="5" required>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="group-end">
+                    <label for="variations">Variations:</label>
+                    <textarea id="variations" name="variations" rows="1" placeholder="Everyone must leave satisfied!.."></textarea>
+                    <br>
+                    <label for="notes">Notes:</label>
+                    <textarea id="notes" name="notes" rows="4" placeholder="Facts, considerations, and anything else important."></textarea>
+                    <br>
+                    <label for="images">Add Photos:</label>
+                    <input type="file" id="images" name="images" accept="image/*" multiple>
+                    <br>
+                </div>
+            </div>
+        </form>
+        <p class="tips">Tips for adding new recipes:</p>
+    </article>
 </div>
     
 {% endblock %}
