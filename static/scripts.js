@@ -39,9 +39,11 @@
             const slider = document.getElementById(elementId);
             const valueDisplay = document.getElementById(valueId);
             
-            slider.addEventListener('input', function() {
-                valueDisplay.textContent = this.value;
-            });
+            if (slider && valueDisplay) { // Check if both elements exist
+                slider.addEventListener('input', function() {
+                    valueDisplay.textContent = this.value;
+                });
+            }
         }
         
         updateValue('prep_time', 'prep_time_value');

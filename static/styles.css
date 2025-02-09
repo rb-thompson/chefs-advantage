@@ -4,15 +4,15 @@
     --background-color: #1a1a1a; /* Very dark gray for a futuristic feel */
     --text-color: #ffee6b; /* Sunflower for text */
     --accent-color: #ff6b6b; /* Neon pink */
-    --secondary-accent: #ff8a66; /* Deep purple */
+    --dark-accent-color: #220f0f; /* Plum */
+    --secondary-accent: #ff8a66; /* Peach */
     --button-hover-color: #ff4b4b; /* Slightly darker pink for hover effects */
-    --delete-button-bg: rgba(255, 107, 107, 0.7); /* Semi-transparent neon pink for delete button */
     --button-border-color: #803939; /* Darker shade for button borders */
     --card-background: #2a2a2a; /* Slightly lighter dark gray */
     --highlight-color: #ffee6b; /* For highlighting elements */
     --shadow-color: rgba(0,0,0,0.5); /* Shadow for cards and elements */
     --overlay-color: rgba(0, 0, 0, 0.8); /* Dark overlay for lightbox */
-    --dark-accent-color: #220f0f;
+
 }
 
 /* Browser scrollbar styles */
@@ -34,15 +34,15 @@
 }
 
 /* Base Styles */
+.wrapper {
+    margin: 0px 20px;   /* side margin utility */
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
     margin: 0px 0px;
-}
-
-.wrapper {
-    margin: 0px 20px;
 }
 
 h1, h2, h3 {
@@ -56,7 +56,6 @@ a {
 
 a:hover {
     text-decoration: none;
-
 }
 
 ul {
@@ -236,6 +235,10 @@ button {
     box-shadow: 0 2px 5px var(--shadow-color);
 }
 
+.card h2 {
+    margin-top: 0;
+}
+
 .recipe-card {
     background-color: var(--card-background);
     border-radius: 8px;
@@ -258,10 +261,6 @@ button {
     margin: 0;
 }
 
-.card h2 {
-    margin-top: 0;
-}
-
 .recipe-card:hover {
     box-shadow: 0 5px 0px var(--button-border-color);
     transform: translateY(-2px);
@@ -281,10 +280,21 @@ button {
     height: 100%; /* Fill the height of the li */
 }
 
-/* Hover effect for the entire card */
-.recipe-card-link:hover .recipe-card {
-    transform: translateY(-2px);
-    transition: transform 0.2s;
+.big-recipe-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.big-recipe-card h1 {
+    font-size: 2em;
+    margin: 20px;
+    text-align: center;
+}
+
+.big-recipe-card-date {
+    color: var(--accent-color);
+    text-align: center;
 }
 
 .ingredient {
@@ -341,7 +351,6 @@ button {
 }
 
 .content-section {
-    margin: 30px 0;
     background-color: transparent;
     padding: 0;
     border-radius: 8px;
@@ -349,6 +358,14 @@ button {
 
 .content-section h3 {
     margin-top: 0;
+}
+
+.content-section ul {
+    width: max-content;
+    margin: 0 auto;
+    border: 1px solid var(--accent-color);
+    padding: 0px 20px 20px 20px;
+    border-radius: 4px;
 }
 
 .actions {
