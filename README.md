@@ -13,6 +13,7 @@ This app for the web browser allows kitchen workers a quick and easy reference t
 
 ## Data
 - [x] Recipes and image paths stored in sqlite database
+- [x] Uploaded images are renamed with a unique hash
 - [x] Images are saved and managed inside `static/uploads` 
 - [x] Database is optimized regularly for performance
 

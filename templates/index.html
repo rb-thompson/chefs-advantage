@@ -50,15 +50,7 @@
 
     <!-- Main Content: No recipes OR all recipes OR filtered recipes -->
     <section class="content-section">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+        <!-- Implement flash message logic here -->
 
         {% if recipes %}
         <ul class="recipe-grid">

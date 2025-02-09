@@ -3,6 +3,7 @@ import sqlite3
 import os
 from datetime import datetime
 from werkzeug.utils import secure_filename
+import random
 
 app = Flask(__name__)
 app.secret_key = 'its_all_in_sauce'  # Required for flash messages
@@ -80,6 +81,12 @@ def format_date(value, format='%Y-%m-%d %H:%M:%S'):
         return dt.strftime(format)
     return value
 
+# Generate a unique hash for image uploads
+def generate_image_hash():
+    digits = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    unique_hash = 'IMG_' + ''.join([str(random.choice(digits)) for _ in range(10)])
+    return unique_hash
+
 # Home page - Display all recipes
 @app.route('/')
 def index():
@@ -132,8 +139,12 @@ def add_recipe():
             files = request.files.getlist('images')
             for file in files:
                 if file and allowed_file(file.filename):
-                    filename = secure_filename(file.filename)
-                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename).replace('\\', '/')
+                    # Generate new filename with 10-digit hash
+                    hash_value = generate_image_hash()
+                    extension = file.filename.rsplit('.', 1)[1].lower()
+                    new_filename = f"{hash_value}.{extension}"
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
+                    
                     file.save(filepath)
                     c.execute('''
                         INSERT INTO recipe_images (recipe_id, image_path)
@@ -194,8 +205,12 @@ def update_recipe(recipe_id):
             files = request.files.getlist('images')
             for file in files:
                 if file and allowed_file(file.filename):
-                    filename = secure_filename(file.filename)
-                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename).replace('\\', '/')
+                    # Generate new filename with 10-digit hash
+                    hash_value = generate_image_hash()
+                    extension = file.filename.rsplit('.', 1)[1].lower()
+                    new_filename = f"{hash_value}.{extension}"
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename).replace('\\', '/')
+                    
                     file.save(filepath)
                     c.execute('''
                         INSERT INTO recipe_images (recipe_id, image_path)
