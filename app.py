@@ -7,13 +7,6 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.secret_key = 'its_all_in_sauce'  # Required for flash messages
 
-@app.template_filter('format_date')
-def format_date(value, format='%Y-%m-%d %H:%M:%S'):
-    if value:
-        dt = datetime.strptime(value, '%Y-%m-%d')  # Adjust this format string according to how your date is stored
-        return dt.strftime(format)
-    return value
-
 # Configuration for file uploads
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -79,18 +72,26 @@ def get_db_connection():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# Format dates
+@app.template_filter('format_date')
+def format_date(value, format='%Y-%m-%d %H:%M:%S'):
+    if value:
+        dt = datetime.strptime(value, '%Y-%m-%d')  # Adjust this format string according to how your date is stored
+        return dt.strftime(format)
+    return value
+
 # Home page - Display all recipes
 @app.route('/')
 def index():
     conn = get_db_connection()
     c = conn.cursor()
 
-        # Get total recipes
+    # Get total recipes
     c.execute('SELECT COUNT(*) FROM recipes')
     total_recipes = c.fetchone()[0]
 
-    # Get recent recipes, assuming you want the 5 most recent
-    c.execute('SELECT id, title, date FROM recipes ORDER BY date DESC LIMIT 5')
+    # Get recent recipes, assuming you want the 10 most recent
+    c.execute('SELECT id, title, date FROM recipes ORDER BY date DESC LIMIT 10')
     recently_added = c.fetchall()
 
     # Get all recipes
@@ -242,6 +243,21 @@ def delete_recipe(recipe_id):
     flash('Recipe and associated images deleted successfully!', 'success')
     return redirect(url_for('index'))
 
+# Delete an image
+@app.route('/delete_image/<int:image_id>')
+def delete_image(image_id):
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute('SELECT image_path FROM recipe_images WHERE id = ?', (image_id,))
+    image = c.fetchone()
+    if image:
+        os.remove(image['image_path'])  # Delete the file from the filesystem
+        c.execute('DELETE FROM recipe_images WHERE id = ?', (image_id,))
+        conn.commit()
+        flash('Image deleted successfully!', 'success')
+    conn.close()
+    return redirect(request.referrer)
+
 # Search for recipes
 @app.route('/search', methods=['GET'])
 def search():
@@ -281,21 +297,6 @@ def search():
     
     return render_template('index.html', recipes=recipes, recently_added=recently_added, 
                            keyword=keyword, ingredient=ingredient)
-
-# Delete an image
-@app.route('/delete_image/<int:image_id>')
-def delete_image(image_id):
-    conn = get_db_connection()
-    c = conn.cursor()
-    c.execute('SELECT image_path FROM recipe_images WHERE id = ?', (image_id,))
-    image = c.fetchone()
-    if image:
-        os.remove(image['image_path'])  # Delete the file from the filesystem
-        c.execute('DELETE FROM recipe_images WHERE id = ?', (image_id,))
-        conn.commit()
-        flash('Image deleted successfully!', 'success')
-    conn.close()
-    return redirect(request.referrer)
 
 # Generate a PDF for a recipe
 @app.route('/generate_pdf/<int:recipe_id>')
