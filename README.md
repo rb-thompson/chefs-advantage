@@ -11,6 +11,14 @@ This app for the web browser allows kitchen workers a quick and easy reference t
 - [x] Recipe search by keyword and/or ingredient tool
 - [x] Responsive recipe cards and layouts
 
+## Working On
+- [ ] Page layouts
+- [ ] Improve the `+ Add Recipe` CTA in the header section
+- [ ] Display search result filters and count for searches
+- [ ] Implement `categories` column into `recipes` table
+- [ ] Implement categorical search filter, top categories section in dashboard
+- [ ] Ingredient measurements
+
 ## Data
 - [x] Recipes and image paths stored in sqlite database
 - [x] Uploaded images are renamed with a unique hash
