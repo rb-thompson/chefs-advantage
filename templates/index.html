@@ -6,7 +6,7 @@
     <div class="wrapper">
         <header class="header-section">
             <div class="header-content">
-                <h1><i class="fa-solid fa-book"></i> Recipe Vault</h1>
+                <h1><i class="fa-solid fa-vault"></i> Recipe Vault</h1>
                 <a href="{{ url_for('add_recipe') }}" class="add-button"><i class="fa-solid fa-plus"></i> <span>Add New Recipe</span></a>
                 
             </div>
@@ -29,8 +29,10 @@
                             <label for="ingredient">Ingredient</label>
                             <input type="text" id="ingredient" name="ingredient" placeholder="Search by ingredient" value="{{ ingredient or '' }}">
                         </div>
-                        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-                        <button type="button" id="clear-filters" onclick="clearSearch()">Clear Filters</button>
+                        <div class="actions">
+                            <button type="submit" class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            <button type="button" class="neutral-button" id="clear-filters" onclick="clearSearch()">Clear Filters <i class="fa-solid fa-xmark"></i></button>
+                        </div>
                     </form>
                 </div>
     
@@ -40,7 +42,7 @@
                     <ul class="recent-recipes">
                         {% for recent in recently_added %}
                         <li>
-                            <span class="date">{{ recent['date'] }}</span>
+                            <span class="date">{{ recent['date'] | format_date("%B %d, %Y") }}</span>
                             <a href="{{ url_for('view_recipe', recipe_id=recent['id']) }}">{{ recent['title'] }}</a>
                             
                         </li>

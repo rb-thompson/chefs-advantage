@@ -313,12 +313,12 @@ def search():
     if not recipes:
         results = "No recipes found matching your criteria."
     else:
-        if keyword:
+        if keyword and ingredient:
+            results = f"Found {len(recipes)} recipes matching your filters '{keyword}' and '{ingredient}':"
+        elif keyword:
             results = f"Found {len(recipes)} recipes matching your keyword '{keyword}':"
         elif ingredient:
             results = f"Found {len(recipes)} recipes containing '{ingredient}':"
-        elif keyword and ingredient:
-            results = f"Found {len(recipes)} recipes matching your filters '{keyword}' and '{ingredient}':"
         else:
             results = f"Showing all {len(recipes)} recipes in the database:"
 
