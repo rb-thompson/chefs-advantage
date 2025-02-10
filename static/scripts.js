@@ -15,8 +15,14 @@
             lightbox.innerHTML = `<img src="${image.src}" alt="Recipe Image">`;
             lightbox.style.zIndex = '1000'; // Ensure lightbox is on top of overlay
 
+            const info = document.createElement('div');
+            info.className = 'lightbox-info';
+            info.innerHTML = `<p>Click anywhere outside the photo to exit.</p>`
+            info.style.zIndex = '1001';
+
             document.body.appendChild(overlay);
             document.body.appendChild(lightbox);
+            document.body.appendChild(info);
 
             document.body.style.overflow = 'hidden'; // Prevent scrolling
 
@@ -24,11 +30,13 @@
             const closeLightbox = () => {
                 overlay.remove();
                 lightbox.remove();
+                info.remove();
                 document.body.style.overflow = ''; // Restore scrolling
             };
 
             overlay.addEventListener('click', closeLightbox);
             lightbox.addEventListener('click', closeLightbox);
+            info.addEventListener('click', closeLightbox)
         });
     });
 

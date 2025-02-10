@@ -97,7 +97,7 @@ def index():
     total_recipes = c.fetchone()[0]
 
     # Get recent recipes, assuming you want the 10 most recent
-    c.execute('SELECT id, title, date FROM recipes ORDER BY date DESC LIMIT 10')
+    c.execute('SELECT id, title, date FROM recipes ORDER BY date DESC LIMIT 8')
     recently_added = c.fetchall()
 
     # Get all recipes
