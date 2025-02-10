@@ -105,11 +105,13 @@ def index():
     recipes = c.fetchall()
     conn.close()
 
+    results = f"Showing all {len(recipes)} recipes in the database:"
+
     if not recipes:
         message = "You don't have any recipes yet. Why not add your first one?"
         return render_template('index.html', recipes=recipes, message=message, total_recipes=total_recipes, recently_added=recently_added)
     
-    return render_template('index.html', recipes=recipes, total_recipes=total_recipes, recently_added=recently_added)
+    return render_template('index.html', recipes=recipes, total_recipes=total_recipes, recently_added=recently_added, results=results)
 
 # Add a new recipe
 @app.route('/add', methods=['GET', 'POST'])
@@ -302,15 +304,27 @@ def search():
     c.execute('SELECT id, title, date FROM recipes ORDER BY date DESC LIMIT 10')
     recently_added = c.fetchall()
 
+    # Get total recipe count
+    c.execute('SELECT COUNT(*) FROM recipes')
+    total_recipes = c.fetchone()[0]
+
     conn.close()
 
     if not recipes:
-        message = "No recipes found matching your criteria."
-        return render_template('index.html', recipes=recipes, message=message, recently_added=recently_added, 
-                               keyword=keyword, ingredient=ingredient)
-    
+        results = "No recipes found matching your criteria."
+    else:
+        if keyword:
+            results = f"Found {len(recipes)} recipes matching your keyword '{keyword}':"
+        elif ingredient:
+            results = f"Found {len(recipes)} recipes containing '{ingredient}':"
+        elif keyword and ingredient:
+            results = f"Found {len(recipes)} recipes matching your filters '{keyword}' and '{ingredient}':"
+        else:
+            results = f"Showing all {len(recipes)} recipes in the database:"
+
     return render_template('index.html', recipes=recipes, recently_added=recently_added, 
-                           keyword=keyword, ingredient=ingredient)
+                           keyword=keyword, ingredient=ingredient, total_recipes=total_recipes, 
+                           results=results)
 
 # Generate a PDF for a recipe
 @app.route('/generate_pdf/<int:recipe_id>')

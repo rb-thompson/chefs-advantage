@@ -154,6 +154,12 @@ button {
     color: var(--text-color)
 }
 
+.feed {
+    font-size: .8em;
+    font-style: italic;
+    color: #919191;
+}
+
 /* Header Styles */
 .sticky-header {
     position: sticky;
@@ -189,13 +195,15 @@ button {
 }
 
 .header-section .add-button {
-    font-size: 0.9em;
+    font-size: 1em;
 }
 
 .total-recipes {
-    font-size: 0.8em;
+    font-size: 1em;
     color: var(--accent-color);
     margin-top: 5px;
+    padding: 5px 10px;
+    border: solid 1px var(--accent-color)
 }
 
 .encouragement {
@@ -224,6 +232,13 @@ button {
 
 .photo-gallery {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    margin-top: 10px;
+}
+
+.photo-block {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, 150px);
     margin-top: 10px;
 }
 
@@ -262,7 +277,7 @@ button {
 }
 
 .recipe-card:hover {
-    box-shadow: 0 5px 0px var(--button-border-color);
+    box-shadow: 0 5px 0px black;
     transform: translateY(-2px);
 }
 
@@ -292,8 +307,8 @@ button {
     text-align: center;
 }
 
-.big-recipe-card-date {
-    color: var(--accent-color);
+.big-recipe-card-meta {
+    color: var(--text-color);
     text-align: center;
 }
 
@@ -491,7 +506,7 @@ button {
 
 /* Medium Screens */
 @media (max-width: 768px) {
-    .grid-container {
+    .grid-container, .big-recipe-card {
         grid-template-columns: 1fr;
     }
     
@@ -501,6 +516,13 @@ button {
 
     .header-section .add-button {
         margin-top: 10px;
+    }
+
+    .photo-block {
+        display: grid;
+        gap: 20px;
+        grid-template-columns: repeat(2, auto);
+        margin: 10px 0px 40px 0px;
     }
 }
 

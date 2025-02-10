@@ -49,3 +49,10 @@
         updateValue('prep_time', 'prep_time_value');
         updateValue('cook_time', 'cook_time_value');
     });
+
+    // Clear search filters and reload the page
+    function clearSearch() {
+        document.getElementById('search-form').reset();
+        // Redirect to the search page without any parameters to clear all filters
+        window.location.href = "/";
+    }

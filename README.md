@@ -12,9 +12,9 @@ This app for the web browser allows kitchen workers a quick and easy reference t
 - [x] Responsive recipe cards and layouts
 
 ## Working On
-- [ ] Page layouts
-- [ ] Improve the `+ Add Recipe` CTA in the header section
-- [ ] Display search result filters and count for searches
+- [X] Page layouts
+- [X] Improve the `+ Add Recipe` CTA in the header section
+- [X] Display search result filters and count for searches
 - [ ] Implement `categories` column into `recipes` table
 - [ ] Implement categorical search filter, top categories section in dashboard
 - [ ] Ingredient measurements

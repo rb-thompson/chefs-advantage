@@ -8,6 +8,7 @@
             <div class="header-content">
                 <h1><i class="fa-solid fa-book"></i> Recipe Vault</h1>
                 <a href="{{ url_for('add_recipe') }}" class="add-button"><i class="fa-solid fa-plus"></i> <span>Add New Recipe</span></a>
+                
             </div>
             <!-- Refactor this and other metrics into the dashboard:             -->
             <!-- <p class="total-recipes">Total Recipes: {{ total_recipes }}</p> -->
@@ -19,7 +20,7 @@
                 <!-- Search Feature -->
                 <div class="card left-card">
                     <h2>Search Recipes</h2>
-                    <form method="GET" action="{{ url_for('search') }}" class="modern-form">
+                    <form id="search-form" method="GET" action="{{ url_for('search') }}" class="modern-form">
                         <div class="form-group">
                             <label for="keyword">Keyword</label>
                             <input type="text" id="keyword" name="keyword" placeholder="Search by keyword" value="{{ keyword or '' }}" autofocus>
@@ -29,6 +30,7 @@
                             <input type="text" id="ingredient" name="ingredient" placeholder="Search by ingredient" value="{{ ingredient or '' }}">
                         </div>
                         <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        <button type="button" id="clear-filters" onclick="clearSearch()">Clear Filters</button>
                     </form>
                 </div>
     
@@ -49,11 +51,11 @@
             </div>
         </section>
     
+
         <!-- Main Content: No recipes OR all recipes OR filtered recipes -->
         <section>
-            <!-- Implement flash message logic here -->
-    
             {% if recipes %}
+            <p class="feed">{{ results }}</p>
             <ul class="recipe-grid">
                 {% for recipe in recipes %}
                 <li>
@@ -76,7 +78,7 @@
                 {% endfor %}
             </ul>
             {% else %}
-                <p>No recipes to display. Try adding a new recipe!</p>
+                <p>No recipes found. Try adding a new recipe!</p>
             {% endif %}
         </section>
     </div>
