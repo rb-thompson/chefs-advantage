@@ -4,10 +4,13 @@ This app for the web browser allows kitchen workers a quick and easy reference t
 
 ## UI Preview 
 
+- Dashboard
 ![Dashboard Preview](dashboard-preview.png)
 
+- Photo Gallery
 ![Gallery Preview](gallery-preview.png)
 
+- Lightbox Photo Viewer
 ![Gallery Photo Preview](gallery-photo-preview.png)
 
 ## Features
