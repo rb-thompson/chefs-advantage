@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file, flash, get_flashed_messages
+from flask import Flask, render_template, request, redirect, url_for, send_file, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect
@@ -271,11 +271,7 @@ def delete_recipe(recipe_id):
     db.session.delete(recipe)
     db.session.commit()
     
-    # Note: VACUUM is not needed with SQLAlchemy and might not be necessary
-    # for most deployments. If still needed, you might want to handle it
-    # separately as a maintenance task.
-    
-    flash('Recipe and associated images deleted successfully!', 'success')
+    flash('Done! Recipe and associated images deleted successfully.', 'success')
     return redirect(url_for('index'))
 
 # Delete an image
@@ -288,7 +284,7 @@ def delete_image(image_id):
     
     db.session.delete(image)
     db.session.commit()
-    flash('Image deleted successfully!', 'success')
+    flash('Bleep blop! Image deleted successfully.', 'success')
     return redirect(request.referrer)
 
 # Search for recipes
@@ -320,15 +316,20 @@ def search():
     recently_added = Recipe.query.order_by(Recipe.date.desc()).limit(10).all()
 
     if not recipes:
+        flash('Recipe not there? Add one!', 'info')
         results = "No recipes found matching your criteria."
     else:
         if keyword and ingredient:
+            flash(f'{len(recipes)} recipes found!', 'success')
             results = f"Found {len(recipes)} recipes matching your filters '{keyword}' and '{ingredient}':"
         elif keyword:
+            flash(f'{len(recipes)} recipes found!', 'success')
             results = f"Found {len(recipes)} recipes matching your keyword '{keyword}':"
         elif ingredient:
+            flash(f'{len(recipes)} recipes found!', 'success')
             results = f"Found {len(recipes)} recipes containing '{ingredient}':"
         else:
+            flash(f'{len(recipes)} recipes found! Get cooking!', 'info')
             results = f"Showing all {len(recipes)} recipes in the database:"
 
     return render_template('index.html', 
@@ -344,7 +345,7 @@ def search():
 def generate_pdf(recipe_id):
     try:
         recipe = Recipe.query.get_or_404(recipe_id)
-        
+
         # Create PDF instance
         pdf = FPDF()
         pdf.add_page()
@@ -411,9 +412,13 @@ def generate_pdf(recipe_id):
             download_name=download_name,
             mimetype='application/pdf'
         )
+    
     except Exception as e:
         app.logger.error(f"Error generating PDF for recipe {recipe_id}: {str(e)}")
+        flash('Application cooked. Something went wrong.', 'error')
         return f"Error generating PDF: {str(e)}", 500
+    
+    
 
 @app.route('/photo_gallery')
 def photo_gallery():
@@ -443,6 +448,7 @@ def photo_gallery():
         
         results = f"Showing {len(images)} images matching '{keyword}'."
         if not images:
+            flash('Make your memories count. Upload photos!', 'info')
             results = "No photos found for this keyword. Why not add your first one?"
     else:
         # Get all images with recipe information

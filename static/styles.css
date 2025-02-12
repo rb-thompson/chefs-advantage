@@ -256,9 +256,27 @@ button {
     box-shadow: 0 2px 5px var(--shadow-color);
 }
 
-.card h2 {
+.card h2, .light-card h2, .info-card h2 {
     margin-top: 0;
 }
+
+.light-card {
+    background-color: transparent;
+    border: 1px solid var(--card-background);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 6px 5px var(--shadow-color);
+}
+
+.info-card {
+    background-color: transparent;
+    border: 1px solid #428adc;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 6px 5px var(--shadow-color);
+}
+
+
 
 .recipe-card {
     background-color: var(--card-background);
@@ -315,7 +333,7 @@ button {
 }
 
 .big-recipe-card-meta {
-    color: var(--text-color);
+    color: var(--accent-color);
     text-align: center;
 }
 
@@ -332,6 +350,10 @@ button {
     color: rgb(243, 243, 243);
     background-color: transparent;
     border: 1px solid #428adc;
+}
+
+.ing-color {
+    color: #ffd24b;
 }
 
 /* Recent Recipes */
@@ -687,14 +709,14 @@ button {
     color: #fff;
     padding: 12px 12px;
     margin-bottom: 10px;
-    border-radius: 6px;
+    border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: space-between;
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease;
     pointer-events: auto;
 }
 
@@ -703,12 +725,17 @@ button {
 }
 
 .flash-modal.alert-success {
-    background-color: #28a7463e;
+    background-color: #28a746b9;
     border: 1px solid #28a746ec;
 }
 
+.flash-modal.alert-info {
+    background-color: #286ea7b5;
+    border: 1px solid #428adc;
+}
+
 .flash-modal.alert-error {
-    background-color: #dc35464d;
+    background-color: #dc3546b0;
     border: 1px solid #dc3546f3;
 }
 

@@ -20,7 +20,7 @@
             <div class="grid-container">
     
                 <!-- Search Feature -->
-                <div class="card left-card">
+                <div class="light-card">
                     <h2>Search Recipes</h2>
                     <form id="search-form" method="GET" action="{{ url_for('search') }}" class="modern-form">
                         <div class="form-group">
@@ -39,7 +39,7 @@
                 </div>
     
                 <!-- Recently Added Recipes -->
-                <div class="card right-card">
+                <div class="info-card">
                     <h2>Recently Added</h2>
                     <ul class="recent-recipes">
                         {% for recent in recently_added %}

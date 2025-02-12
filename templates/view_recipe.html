@@ -9,7 +9,6 @@
                 <a href="{{ url_for('index') }}" class="back-button"><i class="fa-solid fa-circle-left"></i><span>Back to All Recipes</span></a>
                 <a href="{{ url_for('update_recipe', recipe_id=recipe['id']) }}" class="update-button"><i class="fa-solid fa-pen"></i><span>Update Recipe</span></a>
                 <a href="{{ url_for('generate_pdf', recipe_id=recipe['id']) }}" class="pdf-button"><i class="fa-solid fa-file-pdf"></i><span>PDF</span></a>
-    
             </div>
         </header>
         
@@ -30,7 +29,7 @@
                     <ul>
                         <h2>Ingredients</h2>
                         {% for ingredient in ingredients_list %}
-                            <li><i class="fa-regular fa-square"></i> {{ ingredient.strip() }}</li>
+                            <li class="ing-color"><i class="fa-regular fa-square"></i> {{ ingredient.strip() }}</li>
                         {% endfor %}
                     </ul>
                 </div>
