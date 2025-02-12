@@ -2,7 +2,11 @@
 This app for the web browser allows kitchen workers a quick and easy reference tool for finding, creating, and revising recipes.
 "I finally get to save all those treasured, greasy stacks of hand-scribbled recipes from their poor, crumpled state!" - Real Testimonial
 
-![App Preview](preview.png)
+![App Preview](dashboard-preview.png)
+
+![App Preview](gallery-preview.png)
+
+![App Preview](gallery-photo-preview.png)
 
 ## Features
 - [x] Quick reference dashboard
@@ -17,7 +21,7 @@ This app for the web browser allows kitchen workers a quick and easy reference t
 - [X] Display search result filters and count for searches
 - [ ] Implement `categories` column into `recipes` table
 - [ ] Implement categorical search filter, top categories section in dashboard
-- [ ] Ingredient measurements
+- [x] Ingredient measurements
 
 ## Data
 - [x] Recipes and image paths stored in sqlite database
