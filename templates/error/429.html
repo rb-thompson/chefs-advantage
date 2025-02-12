@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}Too Many Requests{% endblock %}
+
+{% block content %}
+    <div class="wrapper">
+        <div class="error-container">
+            <h1>429 - Too Many Requests</h1>
+            <p>You've exceeded the request limit. Please wait a moment and try again.</p>
+            <a href="{{ url_for('index') }}" class="back-button">
+                <i class="fa-solid fa-circle-left"></i><span>Back to Home</span>
+            </a>
+        </div>
+    </div>
+{% endblock %}

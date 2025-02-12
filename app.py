@@ -14,6 +14,9 @@ import os
 from io import BytesIO
 from datetime import datetime
 import random
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_limiter.errors import RateLimitExceeded
 
 
 # Load environment variables
@@ -27,6 +30,27 @@ class Config:
     UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER', 'static/uploads')
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max upload size
+    RATELIMIT_STORAGE_URL = os.getenv('RATELIMIT_STORAGE_URL', 'memory://')
+    # RATELIMIT_STORAGE_URL = os.getenv('RATELIMIT_STORAGE_URL', 'redis://localhost:6379')
+    # For Redis, you'll need to install redis:
+    # pip install redis
+    RATELIMIT_DEFAULTS = ["200 per day", "50 per hour"]
+    RATELIMIT_STRATEGY = "fixed-window"
+
+    # Security settings
+    SESSION_COOKIE_SECURE = True  # Only send cookies over HTTPS
+    SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access to cookies
+    SESSION_COOKIE_SAMESITE = 'Lax'  # Protect against CSRF
+    PERMANENT_SESSION_LIFETIME = 3600  # Sessions expire after 1 hour
+
+    # Database performance
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_size': 10,  # Number of connections to keep open
+        'max_overflow': 20,  # Extra connections for bursts
+        'pool_timeout': 30,  # How long to wait for a connection
+        'pool_recycle': 1800,  # Recycle connections after 30 minutes
+    }
+
     DEBUG = False
     ENV = 'production'
 
@@ -41,6 +65,15 @@ config = DevelopmentConfig() if config_mode == 'development' else Config()
 # Initialize Flask app
 app = Flask(__name__)
 app.config.from_object(config)
+
+# Initialize rate limiter using config class
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=app.config['RATELIMIT_DEFAULTS'],
+    storage_uri=app.config['RATELIMIT_STORAGE_URL'],
+    strategy=app.config['RATELIMIT_STRATEGY']
+)
 
 # Initialize SQLAlchemy
 db = SQLAlchemy(app)
@@ -175,6 +208,7 @@ def index():
 
 # Add a new recipe
 @app.route('/add', methods=['GET', 'POST'])
+@limiter.limit("10 per minute")  # Limit recipe creation
 def add_recipe():
     form = RecipeForm()
     if request.method == 'POST' and form.validate_on_submit():
@@ -238,6 +272,7 @@ def view_recipe(recipe_id):
 
 # Update a recipe
 @app.route('/update/<int:recipe_id>', methods=['GET', 'POST'])
+@limiter.limit("20 per minute")  # Limit recipe updates
 def update_recipe(recipe_id):
     recipe = Recipe.query.get_or_404(recipe_id)
     form = RecipeForm()
@@ -296,6 +331,7 @@ def update_recipe(recipe_id):
 
 # Delete a recipe
 @app.route('/delete_recipe/<int:recipe_id>', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")  # Stricter limit for deletions
 def delete_recipe(recipe_id):
     recipe = Recipe.query.get_or_404(recipe_id)
     app.logger.info(f"Attempting to delete recipe {recipe_id}")
@@ -315,6 +351,7 @@ def delete_recipe(recipe_id):
 
 # Delete an image
 @app.route('/delete_image/<int:image_id>')
+@limiter.limit("5 per minute")  # Stricter limit for image deletions
 def delete_image(image_id):
     image = RecipeImage.query.get_or_404(image_id)
     
@@ -328,6 +365,7 @@ def delete_image(image_id):
 
 # Search for recipes
 @app.route('/search', methods=['GET'])
+@limiter.limit("25 per minute")  # Pace search requests
 def search():
     # Get total recipe count
     total_recipes = Recipe.query.count()
@@ -381,6 +419,7 @@ def search():
 
 # Generate PDF
 @app.route('/generate_pdf/<int:recipe_id>')
+@limiter.limit("5 per minute")  # Limit PDF generation (resource-intensive)
 def generate_pdf(recipe_id):
     try:
         recipe = Recipe.query.get_or_404(recipe_id)
@@ -503,6 +542,12 @@ def photo_gallery():
         images=images,
         results=results
     )
+
+@app.errorhandler(RateLimitExceeded)
+def handle_rate_limit_exceeded(e):
+    app.logger.warning(f"Rate limit exceeded for {request.remote_addr}: {str(e)}")
+    flash('Too many requests. Please try again later.', 'error')
+    return render_template('error/429.html'), 429
 
 if __name__ == '__main__':
     init_db()
