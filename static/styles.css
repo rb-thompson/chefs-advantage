@@ -407,6 +407,30 @@ button {
     margin: 0;
 }
 
+.gallery-button {
+    border: 1px solid #428adc;
+    color: #428adc;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease; /* Smooth transition for all properties */
+    margin: 0;
+}
+
+.menu-button {
+    border: 1px solid #e0b843;
+    color: #ffd24b;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease; /* Smooth transition for all properties */
+    margin: 0;
+}
+
 .submit-button {
     background-color: transparent;
     border: 1px solid #79a74f;
@@ -432,6 +456,20 @@ button {
     color: white;
     border: 1px solid transparent;
 }
+
+.gallery-button:hover {
+    /* Change background color slightly */
+    background-color: #356091;
+    color: white;
+    border: 1px solid transparent;
+}
+
+.menu-button:hover {
+    /* Change background color slightly */
+    background-color: #a88c37;
+    color: white;
+    border: 1px solid transparent;
+}
   
 
 .pdf-button, .back-button, .update-button, .delete-button {
@@ -447,7 +485,7 @@ button {
     margin: 0;
 }
 
-.pdf-button i, .back-button i, .update-button i, .submit-button i, .delete-button i, .add-button i {
+.pdf-button i, .back-button i, .update-button i, .submit-button i, .delete-button i, .add-button i, .gallery-button i, .menu-button i {
     margin-right: 5px; /* Space between icon and text */
 }
 
@@ -591,7 +629,7 @@ button {
         flex-direction: column;
     }
 
-    .header-section .add-button {
+    .header-section {
         margin-top: 10px;
     }
 
@@ -605,15 +643,19 @@ button {
 
 /* Small Screens */
 @media (max-width: 480px) {
-    .pdf-button, .back-button, .update-button {
+    .header-section h1 {
+        margin-bottom: 10px;
+    }
+
+    .pdf-button, .back-button, .update-button, .menu-button, .gallery-button {
         padding: 5px; /* Reduce padding for icons */
     }
     
-    .pdf-button span, .back-button span, .update-button span {
+    .pdf-button span, .back-button span, .update-button span, .menu-button span, .gallery-button span {
         display: none; /* Hide the text */
     }
     
-    .pdf-button i, .back-button i, .update-button i {
-        margin-right: 0; /* Remove margin since text is gone */
+    .pdf-button i, .back-button i, .update-button i, .menu-button i, .gallery-button i {
+        margin: 0px 10px; /* Adjust margin since text is gone */
     }
 }

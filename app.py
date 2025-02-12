@@ -354,6 +354,37 @@ def generate_pdf(recipe_id):
         return send_file(pdf_output, as_attachment=True)
     return "Recipe not found", 404
 
+# Photo gallery
+@app.route('/photo_gallery')
+def photo_gallery():
+
+    conn = get_db_connection()
+    c = conn.cursor()
+
+    # Get total recipe count
+    c.execute('SELECT COUNT(*) FROM recipes')
+    total_recipes = c.fetchone()[0]
+
+    # Get all recipes
+    c.execute('SELECT * FROM recipes')
+    recipes = c.fetchall()
+
+        # Get all recipe images
+    c.execute('SELECT * FROM recipe_images')
+    images = c.fetchall()
+    conn.close()
+
+    results = f"Showing all {len(recipes)} recipes in the database."
+
+    if not recipes:
+        message = "You don't have any recipes yet. Why not add your first one?"
+        return render_template('gallery.html', recipes=recipes, message=message, total_recipes=total_recipes)
+    
+    return render_template('gallery.html', recipes=recipes, total_recipes=total_recipes, results=results, images=images)
+
+# Interactive Menu
+
+
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)

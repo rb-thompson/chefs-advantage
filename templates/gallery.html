@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block title %}Photo Gallery{% endblock %}
+
+{% block content %}
+    <div class="wrapper">
+        <header class="header-section">
+            <div class="header-content">
+                <h1><i class="fa-solid fa-images"></i> Photo Gallery</h1>
+                <div class="actions">
+                    <a href="{{ url_for('index') }}" class="add-button"><i class="fa-solid fa-vault"></i> <span>Recipe Vault</span></a>
+                    <a href="{{ url_for('photo_gallery') }}" class="gallery-button"><i class="fa-solid fa-images"></i> <span>Gallery</span></a>
+                    <a href="#" class="menu-button"><i class="fa-solid fa-map"></i> <span>Menu</span></a>
+                </div>
+                
+            </div>
+        </header>
+    
+        <section class="middle-section">
+            <p class="results"><small>{{ results }}</small></p>
+                <!-- Search Feature -->
+                <form id="search-form" method="GET" action="{{ url_for('search') }}">
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+                            <div class="form-group">
+                                <label for="keyword" style="display: none;">Keyword</label>
+                                <input type="text" id="keyword" name="keyword" placeholder="Search by keyword" value="{{ keyword or '' }}" autofocus>
+                            </div>
+                            <div class="actions">
+                                <button type="submit" class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                <button type="button" class="neutral-button" id="clear-filters" onclick="clearSearch()">Clear <i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                    </div>
+                </form>
+                <br>
+        </section>
+
+        <!-- Photo Gallery -->
+        <section>
+                
+                {% if images %}
+                    <div class="photo-gallery">
+                        {% for image in images %}
+                            <div class="photo-item">
+                                <img src="{{ url_for('static', filename=image['image_path'].replace('static/', '')) }}" alt="Recipe Image">
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                {% else %}
+                    <p>No images to show.</p>
+                {% endif %}
+        </section>
+    
+    </div>
+
+{% endblock %}

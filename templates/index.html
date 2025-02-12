@@ -7,11 +7,13 @@
         <header class="header-section">
             <div class="header-content">
                 <h1><i class="fa-solid fa-vault"></i> Recipe Vault</h1>
-                <a href="{{ url_for('add_recipe') }}" class="add-button"><i class="fa-solid fa-plus"></i> <span>Add New Recipe</span></a>
+                <div class="actions">
+                    <a href="{{ url_for('add_recipe') }}" class="add-button"><i class="fa-solid fa-plus"></i> <span>Add New Recipe</span></a>
+                    <a href="{{ url_for('photo_gallery') }}" class="gallery-button"><i class="fa-solid fa-images"></i> <span>Gallery</span></a>
+                    <a href="#" class="menu-button"><i class="fa-solid fa-map"></i> <span>Menu</span></a>
+                </div>
                 
             </div>
-            <!-- Refactor this and other metrics into the dashboard:             -->
-            <!-- <p class="total-recipes">Total Recipes: {{ total_recipes }}</p> -->
         </header>
     
         <section class="middle-section">
