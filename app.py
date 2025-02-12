@@ -108,24 +108,42 @@ def generate_image_hash():
 # CSRF protection
 csrf = CSRFProtect(app)
 
-# Logging
-if not app.debug:
+# Set up logging
+def setup_logging(app):
     # Create logs directory if it doesn't exist
-    if not os.path.exists('logs'):
-        os.mkdir('logs')
+    log_dir = 'logs'
+    if not os.path.exists(log_dir):
+        os.mkdir(log_dir)
+
+    # Set up file handler with rotation
+    file_handler = RotatingFileHandler(
+        os.path.join(log_dir, 'recipe_app.log'),
+        maxBytes=10240,  # 10KB per file
+        backupCount=10   # Keep 10 backup files
+    )
     
-    # Set up rotating file handler
-    file_handler = RotatingFileHandler('logs/recipe_app.log', 
-                                     maxBytes=10240, 
-                                     backupCount=10)
-    file_handler.setFormatter(logging.Formatter(
+    # Set log format
+    formatter = logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
-    ))
-    file_handler.setLevel(logging.INFO)
+    )
+    file_handler.setFormatter(formatter)
+
+    # Set log level based on environment
+    if app.config['DEBUG']:
+        file_handler.setLevel(logging.DEBUG)
+        app.logger.setLevel(logging.DEBUG)
+    else:
+        file_handler.setLevel(logging.INFO)
+        app.logger.setLevel(logging.INFO)
+
+    # Add handler to app logger
     app.logger.addHandler(file_handler)
-    
-    app.logger.setLevel(logging.INFO)
+
+    # Log startup message
     app.logger.info('Recipe app startup')
+
+# Call setup_logging after app initialization
+setup_logging(app)
 
 # Home page - Display all recipes
 @app.route('/')
@@ -160,40 +178,50 @@ def index():
 def add_recipe():
     form = RecipeForm()
     if request.method == 'POST' and form.validate_on_submit():
-        new_recipe = Recipe(
-            title=form.title.data,
-            author=form.author.data,
-            date=datetime.now().strftime('%Y-%m-%d'),
-            prep_time=form.prep_time.data,
-            cook_time=form.cook_time.data,
-            ingredients=form.ingredients.data,
-            instructions=form.instructions.data,
-            variations=form.variations.data,
-            notes=form.notes.data
-        )
-        db.session.add(new_recipe)
-        db.session.flush()
+        app.logger.info(f"Adding new recipe: {form.title.data}")
+        try:
+            new_recipe = Recipe(
+                title=form.title.data,
+                author=form.author.data,
+                date=datetime.now().strftime('%Y-%m-%d'),
+                prep_time=form.prep_time.data,
+                cook_time=form.cook_time.data,
+                ingredients=form.ingredients.data,
+                instructions=form.instructions.data,
+                variations=form.variations.data,
+                notes=form.notes.data
+            )
+            db.session.add(new_recipe)
+            db.session.flush()
 
-        # Handle image uploads
-        if 'images' in request.files:
-            files = request.files.getlist('images')
-            for file in files:
-                if file and allowed_file(file.filename):
-                    hash_value = generate_image_hash()
-                    extension = file.filename.rsplit('.', 1)[1].lower()
-                    new_filename = f"{hash_value}.{extension}"
-                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename).replace('\\', '/')
-                    
-                    file.save(filepath)
-                    new_image = RecipeImage(
-                        recipe_id=new_recipe.id,
-                        image_path=filepath
-                    )
-                    db.session.add(new_image)
-        
-        db.session.commit()
-        flash('Recipe added successfully!', 'success')
-        return redirect(url_for('index'))
+            # Handle image uploads
+            image_count = 0
+            if 'images' in request.files:
+                files = request.files.getlist('images')
+                for file in files:
+                    if file and allowed_file(file.filename):
+                        hash_value = generate_image_hash()
+                        extension = file.filename.rsplit('.', 1)[1].lower()
+                        new_filename = f"{hash_value}.{extension}"
+                        filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename).replace('\\', '/')
+                        
+                        file.save(filepath)
+                        new_image = RecipeImage(
+                            recipe_id=new_recipe.id,
+                            image_path=filepath
+                        )
+                        db.session.add(new_image)
+                        image_count += 1
+            
+            db.session.commit()
+            app.logger.info(f"Successfully added recipe {new_recipe.id} with {image_count} images")
+            flash('Recipe added successfully!', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error adding recipe: {str(e)}")
+            flash('Error adding recipe. Please try again.', 'error')
+            return render_template('add_recipe.html', form=form)
     return render_template('add_recipe.html', form=form)
 
 # View a single recipe
@@ -216,35 +244,43 @@ def update_recipe(recipe_id):
     images = RecipeImage.query.filter_by(recipe_id=recipe_id).all()
 
     if request.method == 'POST' and form.validate_on_submit():
-        recipe.title = form.title.data
-        recipe.author = form.author.data
-        recipe.prep_time = form.prep_time.data
-        recipe.cook_time = form.cook_time.data
-        recipe.ingredients = form.ingredients.data
-        recipe.instructions = form.instructions.data
-        recipe.variations = form.variations.data
-        recipe.notes = form.notes.data
+        app.logger.info(f"Updating recipe {recipe_id}")
+        try:
+            recipe.title = form.title.data
+            recipe.author = form.author.data
+            recipe.prep_time = form.prep_time.data
+            recipe.cook_time = form.cook_time.data
+            recipe.ingredients = form.ingredients.data
+            recipe.instructions = form.instructions.data
+            recipe.variations = form.variations.data
+            recipe.notes = form.notes.data
 
-        # Handle new image uploads
-        if 'images' in request.files:
-            files = request.files.getlist('images')
-            for file in files:
-                if file and allowed_file(file.filename):
-                    hash_value = generate_image_hash()
-                    extension = file.filename.rsplit('.', 1)[1].lower()
-                    new_filename = f"{hash_value}.{extension}"
-                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename).replace('\\', '/')
-                    
-                    file.save(filepath)
-                    new_image = RecipeImage(
-                        recipe_id=recipe_id,
-                        image_path=filepath
-                    )
-                    db.session.add(new_image)
+            image_count = 0
+            if 'images' in request.files:
+                files = request.files.getlist('images')
+                for file in files:
+                    if file and allowed_file(file.filename):
+                        hash_value = generate_image_hash()
+                        extension = file.filename.rsplit('.', 1)[1].lower()
+                        new_filename = f"{hash_value}.{extension}"
+                        filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename).replace('\\', '/')
+                        
+                        file.save(filepath)
+                        new_image = RecipeImage(
+                            recipe_id=recipe_id,
+                            image_path=filepath
+                        )
+                        db.session.add(new_image)
+                        image_count += 1
 
-        db.session.commit()
-        flash('Recipe updated successfully!', 'success')
-        return redirect(url_for('view_recipe', recipe_id=recipe_id))
+            db.session.commit()
+            app.logger.info(f"Successfully updated recipe {recipe_id} with {image_count} new images")
+            flash('Recipe updated successfully!', 'success')
+            return redirect(url_for('view_recipe', recipe_id=recipe_id))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error updating recipe {recipe_id}: {str(e)}")
+            flash('Error updating recipe. Please try again.', 'error')
     
     # Populate form with existing data for GET request
     form.title.data = recipe.title
@@ -262,16 +298,19 @@ def update_recipe(recipe_id):
 @app.route('/delete_recipe/<int:recipe_id>', methods=['GET', 'POST'])
 def delete_recipe(recipe_id):
     recipe = Recipe.query.get_or_404(recipe_id)
-    
-    # Delete associated images from the filesystem (cascade will handle DB)
-    for image in recipe.images:
-        if os.path.exists(image.image_path):
-            os.remove(image.image_path)
-    
-    db.session.delete(recipe)
-    db.session.commit()
-    
-    flash('Done! Recipe and associated images deleted successfully.', 'success')
+    app.logger.info(f"Attempting to delete recipe {recipe_id}")
+    try:
+        for image in recipe.images:
+            if os.path.exists(image.image_path):
+                os.remove(image.image_path)
+        db.session.delete(recipe)
+        db.session.commit()
+        app.logger.info(f"Successfully deleted recipe {recipe_id}")
+        flash('Recipe and associated images deleted successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error deleting recipe {recipe_id}: {str(e)}")
+        flash('Error deleting recipe. Please try again.', 'error')
     return redirect(url_for('index'))
 
 # Delete an image
@@ -418,8 +457,7 @@ def generate_pdf(recipe_id):
         flash('Application cooked. Something went wrong.', 'error')
         return f"Error generating PDF: {str(e)}", 500
     
-    
-
+# Photo gallery
 @app.route('/photo_gallery')
 def photo_gallery():
     keyword = request.args.get('keyword')
