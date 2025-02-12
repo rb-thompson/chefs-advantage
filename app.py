@@ -354,33 +354,58 @@ def generate_pdf(recipe_id):
         return send_file(pdf_output, as_attachment=True)
     return "Recipe not found", 404
 
-# Photo gallery
 @app.route('/photo_gallery')
 def photo_gallery():
-
     conn = get_db_connection()
     c = conn.cursor()
 
-    # Get total recipe count
-    c.execute('SELECT COUNT(*) FROM recipes')
-    total_recipes = c.fetchone()[0]
+    # If there's a keyword search
+    keyword = request.args.get('keyword')
+    images = []
 
-    # Get all recipes
-    c.execute('SELECT * FROM recipes')
-    recipes = c.fetchall()
+    if keyword:
+        # Search both title and ingredients for the keyword
+        query = '''
+            SELECT id, title, ingredients 
+            FROM recipes 
+            WHERE title LIKE ? OR ingredients LIKE ?
+        '''
+        params = [f'%{keyword}%', f'%{keyword}%']
+        c.execute(query, params)
+        recipes = c.fetchall()
 
-        # Get all recipe images
-    c.execute('SELECT * FROM recipe_images')
-    images = c.fetchall()
+        if recipes:
+            recipe_ids = [recipe['id'] for recipe in recipes]
+            placeholders = ','.join('?' for _ in recipe_ids)
+            image_query = f'''
+                SELECT ri.image_path, r.id as recipe_id, r.title, r.ingredients
+                FROM recipe_images ri
+                JOIN recipes r ON ri.recipe_id = r.id
+                WHERE ri.recipe_id IN ({placeholders})
+            '''
+            c.execute(image_query, recipe_ids)
+            images = c.fetchall()
+        
+        results = f"Showing {len(images)} images matching '{keyword}'."
+        if not images:
+            results = "No photos found for this keyword. Why not add your first one?"
+    else:
+        # Get all images with recipe information
+        c.execute('''
+            SELECT ri.image_path, r.id as recipe_id, r.title, r.ingredients
+            FROM recipe_images ri
+            JOIN recipes r ON ri.recipe_id = r.id
+        ''')
+        images = c.fetchall()
+        results = f"Showing all {len(images)} images."
+
     conn.close()
 
-    results = f"Showing all {len(recipes)} recipes in the database."
-
-    if not recipes:
-        message = "You don't have any recipes yet. Why not add your first one?"
-        return render_template('gallery.html', recipes=recipes, message=message, total_recipes=total_recipes)
-    
-    return render_template('gallery.html', recipes=recipes, total_recipes=total_recipes, results=results, images=images)
+    return render_template(
+        'gallery.html',
+        images=images,
+        results=results
+    )
 
 # Interactive Menu
 

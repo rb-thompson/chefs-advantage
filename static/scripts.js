@@ -1,5 +1,16 @@
+    // Add title overlays to all photo items
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        const img = item.querySelector('img');
+        const title = img.dataset.title;
+        
+        const titleOverlay = document.createElement('div');
+        titleOverlay.className = 'title-overlay';
+        titleOverlay.textContent = title;
+        item.appendChild(titleOverlay);
+    });
+    
     // Open lightbox when an image is clicked
-    document.querySelectorAll('.photo-item img').forEach(image => {
+    document.querySelectorAll('.photo-item img, .gallery-item img').forEach(image => {
         image.addEventListener('click', () => {
             const overlay = document.createElement('div');
             overlay.style.position = 'fixed';
@@ -39,7 +50,6 @@
             info.addEventListener('click', closeLightbox)
         });
     });
-
 
     // Adjust color values
     document.addEventListener('DOMContentLoaded', (event) => {

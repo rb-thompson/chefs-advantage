@@ -2,11 +2,13 @@
 This app for the web browser allows kitchen workers a quick and easy reference tool for finding, creating, and revising recipes.
 "I finally get to save all those treasured, greasy stacks of hand-scribbled recipes from their poor, crumpled state!" - Real Testimonial
 
-![App Preview](dashboard-preview.png)
+## UI Preview 
 
-![App Preview](gallery-preview.png)
+![Dashboard Preview](dashboard-preview.png)
 
-![App Preview](gallery-photo-preview.png)
+![Gallery Preview](gallery-preview.png)
+
+![Gallery Photo Preview](gallery-photo-preview.png)
 
 ## Features
 - [x] Quick reference dashboard
