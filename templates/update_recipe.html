@@ -1,59 +1,70 @@
 {% extends "layout.html" %}
 
-{% block title %}Update Recipe - {{ recipe['title'] }}{% endblock %}
+{% block title %}Update Recipe - {{ recipe.title }}{% endblock %}
     
 {% block content %}
     <header class="sticky-header">
         <div class="actions">
-            <a href="{{ url_for('view_recipe', recipe_id=recipe['id']) }}" class="back-button"><i class="fa-solid fa-circle-left"></i><span>Cancel</span></a>
+            <a href="{{ url_for('view_recipe', recipe_id=recipe.id) }}" class="back-button"><i class="fa-solid fa-circle-left"></i><span>Cancel</span></a>
             <button type="submit" form="update-form" class="submit-button"><i class="fa-solid fa-floppy-disk"></i><span>Save Changes</span></button>
-            <a href="{{ url_for('delete_recipe', recipe_id=recipe['id']) }}" id="delete-button" class="delete-button" onclick="return confirm('Are you sure you want to delete this recipe? This action cannot be undone.');"><i class="fa-solid fa-trash-can"></i><span>Delete Recipe</span></a>    
+            <a href="{{ url_for('delete_recipe', recipe_id=recipe.id) }}" id="delete-button" class="delete-button" onclick="return confirm('Are you sure you want to delete this recipe? This action cannot be undone.');"><i class="fa-solid fa-trash-can"></i><span>Delete Recipe</span></a>    
         </div>
     </header>
 
     <div class="wrapper">
         <div class="recipe-container">
-            <h1>Update {{ recipe['title'] }}</h1>
+            <h1>Update {{ recipe.title }}</h1>
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                    {% for field, errors in form.errors.items() %}
+                        {% for error in errors %}
+                            <li>{{ field }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
             <form method="POST" id="update-form" enctype="multipart/form-data">
+                {{ form.csrf_token }}
                 <div class="grid-container">
                     <div class="group-start">
                         <div class="group">
                             <div class="sub-group-start">
-                                <label for="title">Title:</label>
-                                <input type="text" id="title" name="title" value="{{ recipe['title'] }}" placeholder="What is your dish called?" required autofocus>
+                                <label for="title">{{ form.title.label.text }}:</label>
+                                {{ form.title(id="title", placeholder="What is your dish called?", autofocus=True) }}
                             </div>
                             <div class="sub-group-end">
-                                <label for="author">Author:</label>
-                                <input type="text" id="author" name="author" value="{{ recipe['author'] }}" placeholder="Who does the credit go to?">
+                                <label for="author">{{ form.author.label.text }}:</label>
+                                {{ form.author(id="author", placeholder="Who does the credit go to?") }}
                             </div>
                         </div>
                         <br>
-                        <label for="ingredients">Ingredients (comma separated):</label>
-                        <textarea id="ingredients" name="ingredients" rows="3" required>{{ recipe['ingredients'] }}</textarea>
+                        <label for="ingredients">{{ form.ingredients.label.text }} (comma separated):</label>
+                        {{ form.ingredients(id="ingredients", rows="3", placeholder="flour, milk, eggs, etc..") }}
                         <br>
                         <div class="form-group">
-                            <label for="instructions">Instructions:</label>
-                            <textarea id="instructions" name="instructions" rows="5" required>{{ recipe['instructions'] }}</textarea>
+                            <label for="instructions">{{ form.instructions.label.text }}:</label>
+                            {{ form.instructions(id="instructions", rows="5", placeholder="Step 1: Start somewhere..") }}
                         </div>
                         <div class="group">
                             <div class="sub-group-start">
-                                <label for="prep_time">Prep Time (minutes): <span id="prep_time_value">{{ recipe['prep_time'] }}</span></label>
-                                <input type="range" id="prep_time" name="prep_time" min="0" max="180" value="{{ recipe['prep_time'] }}" step="5" required>
+                                <label for="prep_time">{{ form.prep_time.label.text }}: <span id="prep_time_value">{{ form.prep_time.data }}</span></label>
+                                {{ form.prep_time(id="prep_time", type="range", min="0", max="180", step="5") }}
                             </div>
                             <div class="sub-group-end">
-                                <label for="cook_time">Cook Time (minutes): <span id="cook_time_value">{{ recipe['cook_time'] }}</span></label>
-                                <input type="range" id="cook_time" name="cook_time" min="0" max="180" value="{{ recipe['cook_time'] }}" step="5" required>
+                                <label for="cook_time">{{ form.cook_time.label.text }}: <span id="cook_time_value">{{ form.cook_time.data }}</span></label>
+                                {{ form.cook_time(id="cook_time", type="range", min="0", max="180", step="5") }}
                             </div>
                         </div>
                     </div>
 
                     <div class="group-end">
-                        <label for="variations">Variations:</label>
-                        <textarea id="variations" rows="1" name="variations">{{ recipe['variations'] }}</textarea>
+                        <label for="variations">{{ form.variations.label.text }}:</label>
+                        {{ form.variations(id="variations", rows="1", placeholder="Everyone must leave satisfied!..") }}
                         <br>
-
-                        <label for="notes">Notes:</label>
-                        <textarea id="notes" rows="4" name="notes">{{ recipe['notes'] }}</textarea>
+                        <label for="notes">{{ form.notes.label.text }}:</label>
+                        {{ form.notes(id="notes", rows="4", placeholder="Facts, considerations, and anything else important.") }}
                         <br>
                         <label for="images">Add or Remove Images:</label>
                         <input type="file" id="images" name="images" accept="image/*" multiple>
@@ -64,20 +75,15 @@
                         <div class="photo-gallery">
                             {% for image in images %}
                                 <div class="photo-item">
-                                    <img src="{{ url_for('static', filename=image['image_path'].replace('static/', '')) }}" alt="Current Image">
-                                    <a href="{{ url_for('delete_image', image_id=image['id']) }}" class="delete-image"><i class="fa-solid fa-trash-can"></i></a>
+                                    <img src="{{ url_for('static', filename=image.image_path.replace('static/', '')) }}" alt="Current Image">
+                                    <a href="{{ url_for('delete_image', image_id=image.id) }}" class="delete-image"><i class="fa-solid fa-trash-can"></i></a>
                                 </div>
                             {% endfor %}
                         </div>
                         {% endif %}
-            
-                        
                     </div>
-
                 </div>
             </form>
-    
         </div>
     </div>
-
 {% endblock %}

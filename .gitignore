@@ -1,2 +1,15 @@
 # Databases
 *.db
+
+# Logs
+*.log
+log/
+
+# Flask stuff:
+instance/
+
+# Environments
+.env
+.venv
+env/
+venv/

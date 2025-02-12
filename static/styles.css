@@ -264,7 +264,6 @@ button {
     background-color: var(--card-background);
     border-radius: 8px;
     padding: 20px;
-
     min-height: 180px; /* Or adjust to your liking */
     display: flex;
     flex-direction: column;
@@ -286,7 +285,7 @@ button {
     border-radius: 8px 8px 4px 4px;
     box-shadow: 0 8px 0px #ff4b4b;
     transform: translateY(-4px);
-    background-color: #363532;
+    background-color: #1c1c1a;
 }
 
 /* Additional effect for when the mouse moves off the button */
@@ -669,6 +668,68 @@ button {
     margin: 0;
     display: flex;
     flex-direction: column;
+}
+
+/* Flash Messages */
+.flash-modal-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1100;
+    width: 90%;
+    max-width: 400px;
+    pointer-events: none;
+}
+
+.flash-modal {
+    background-color: #333;
+    color: #fff;
+    padding: 12px 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: auto;
+}
+
+.flash-modal.show {
+    transform: translateY(0);
+}
+
+.flash-modal.alert-success {
+    background-color: #28a7463e;
+    border: 1px solid #28a746ec;
+}
+
+.flash-modal.alert-error {
+    background-color: #dc35464d;
+    border: 1px solid #dc3546f3;
+}
+
+.flash-message {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.flash-close {
+    background: none;
+    border: none;
+    color: #ffffff70;
+    font-size: 1em;
+    cursor: pointer;
+    padding: 0 5px;
+    line-height: 1;
+    margin: auto 0;
+}
+
+.flash-close:hover {
+    opacity: 0.7;
 }
 
 /* Medium Screens */

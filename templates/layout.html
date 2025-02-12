@@ -11,6 +11,19 @@
 </head>
 <body>
     {% block content %}{% endblock %}
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-modal-container">
+                {% for category, message in messages %}
+                    <div class="flash-modal alert-{{ category }}">
+                        <span class="flash-message">{{ message }}</span>
+                        <button type="button" class="flash-close">&times;</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 

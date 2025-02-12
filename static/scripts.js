@@ -74,3 +74,33 @@
         // Redirect to the search page without any parameters to clear all filters
         window.location.href = "/";
     }
+
+    // Modal Flash Messages
+    document.addEventListener('DOMContentLoaded', function() {
+        const flashModals = document.querySelectorAll('.flash-modal');
+        
+        flashModals.forEach(modal => {
+            // Show the modal
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                modal.classList.add('show');
+            }, 100);
+    
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                modal.style.opacity = '0';
+                setTimeout(() => {
+                    modal.remove();
+                }, 300); // Wait for fade-out transition to complete
+            }, 3000);
+    
+            // Close button functionality
+            const closeButton = modal.querySelector('.flash-close');
+            closeButton.addEventListener('click', () => {
+                modal.style.opacity = '0';
+                setTimeout(() => {
+                    modal.remove();
+                }, 300);
+            });
+        });
+    });
